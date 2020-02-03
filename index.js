@@ -1,25 +1,29 @@
 // Import stylesheets
 import "./style.css";
 var filter = {
-  address: "",
-  age: ''
+  address: "u",
+  age: "",
+  paymentTypes: "mobile"
 };
 var users = [
   {
     name: "John",
     email: "johnson@mail.com",
+    paymentTypes: [{ name: "credit" }, { name: "mobile" }],
     age: 25,
     address: "USA"
   },
   {
     name: "Tom",
     email: "tom@mail.com",
+    paymentTypes: [{ name: "loan" }],
     age: 35,
     address: "England"
   },
   {
     name: "Mark",
     email: "mark@mail.com",
+    paymentTypes: [{ name: "mobile" }],
     age: 28,
     address: "England"
   }
@@ -27,15 +31,23 @@ var users = [
 
 users = users.filter(function(item) {
   for (var key in filter) {
-   
-    if (
-      item[key].toString() === undefined ||
-      item[key].toString().toLowerCase().startsWith(filter[key].toString().toLowerCase()) !=
-        filter[key].toString().toLowerCase().startsWith(filter[key].toString().toLowerCase())
-    )
-      return false;
+    if (key === "paymentTypes") {
+      console.log(filter[key].length);
+      if (filter[key].length === 0) {
+        return true;
+      }
+      if (item[key] != undefined) {
+        let home = item[key].filter(function(elements) {
+          if (elements["name"] === filter[key]) {
+            return true;
+          }
+        });
+        if (home.length > 0) {
+          return true;
+        }
+      }
+    }
   }
-  return true;
 });
 
 console.log(users);
