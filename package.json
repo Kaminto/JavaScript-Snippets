@@ -2,5 +2,7 @@
   "name": "js-h1r4jd",
   "version": "0.0.0",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "date-fns": "^2.11.1"
+  }
 }

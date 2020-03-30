@@ -1,5 +1,6 @@
 // Import stylesheets
 import "./style.css";
+import "./compare.js";
 var filter = {
   address: "u",
   age: "",
