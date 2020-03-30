@@ -13,7 +13,7 @@ let remote = [
   },
   {
     active: true,
-    created_at: "2020-03-29T14:48:03.000Z",
+    created_at: "2020-03-29T15:48:03.000Z",
     id: 6,
     kiosk_id: 1112,
     meter_reading_id: "4b4bd730-71cc-11ea-b874-510b07a89ef5",
@@ -52,15 +52,15 @@ function compareRemoteAndLocal(otherArray) {
         //console.log('c',current)
        // if (!other.created_at === current.created_at) {
          
-          return ((compareAsc(parseISO(other.created_at), parseISO(current.created_at)) === -1  || compareAsc(parseISO(other.created_at), parseISO(current.created_at)) === 0) &&
-          (compareAsc(parseISO(other.updated_at), parseISO(current.updated_at)) === -1  || 
-          compareAsc(parseISO(other.updated_at), parseISO(current.updated_at)) === 0))       ;
+          // return ((compareAsc(parseISO(other.created_at), parseISO(current.created_at)) === -1  || compareAsc(parseISO(other.created_at), parseISO(current.created_at)) === 0) &&
+          // (compareAsc(parseISO(other.updated_at), parseISO(current.updated_at)) === -1  || 
+          // compareAsc(parseISO(other.updated_at), parseISO(current.updated_at)) === 0))       ;
          
          
-          // return ((other.created_at > current.created_at || other.created_at === current.created_at) &&
-          // (other.updated_at > current.updated_at || 
-          // other.updated_at === current.updated_at)) 
-          // ;
+          return ((other.created_at > current.created_at || other.created_at === current.created_at) &&
+          (other.updated_at > current.updated_at || 
+          other.updated_at === current.updated_at)) 
+          ;
         //}
       }).length == 0
     );
