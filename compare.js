@@ -1,6 +1,6 @@
 import { parseISO, isSameDay, format, sub, set, add, getSeconds, getMinutes, getHours, compareAsc } from 'date-fns';
 
-remote = [
+let remote = [
   {
     active: true,
     created_at: "2020-03-26T08:31:50.000Z",
@@ -23,7 +23,7 @@ remote = [
   }
 ];
 
-local = [
+let local = [
   {
     active: true,
     created_at: "2020-03-26T08:31:50.000Z",
@@ -48,13 +48,19 @@ function compareRemoteAndLocal(otherArray) {
   return function(current) {
     return (
       otherArray.filter(function(other) {
-        //console.log('o',other)
+        //console.log('o',other.created_at)
         //console.log('c',current)
        // if (!other.created_at === current.created_at) {
-          return ((other.created_at > current.created_at || other.created_at === current.created_at) &&
-          (other.updated_at > current.updated_at || 
-          other.updated_at === current.updated_at)) 
-          ;
+         
+          return ((compareAsc(parseISO(other.created_at), parseISO(current.created_at)) === -1  || compareAsc(parseISO(other.created_at), parseISO(current.created_at)) === 0) &&
+          (compareAsc(parseISO(other.updated_at), parseISO(current.updated_at)) === -1  || 
+          compareAsc(parseISO(other.updated_at), parseISO(current.updated_at)) === 0))       ;
+         
+         
+          // return ((other.created_at > current.created_at || other.created_at === current.created_at) &&
+          // (other.updated_at > current.updated_at || 
+          // other.updated_at === current.updated_at)) 
+          // ;
         //}
       }).length == 0
     );
