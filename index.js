@@ -1,6 +1,6 @@
 // Import stylesheets
 import "./style.css";
-import "./compare2.js";
+import "./compare-objects-by-dates.js";
 var filter = {
   address: "u",
   age: "",

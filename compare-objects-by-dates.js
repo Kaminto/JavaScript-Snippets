@@ -9,8 +9,10 @@ import {
   getMinutes,
   getHours,
   differenceInMilliseconds,
-  compareAsc
+  compareAsc,
+  ug
 } from "date-fns";
+
 
 let remote = [
   {
@@ -208,15 +210,47 @@ var resulte = differenceInMilliseconds(
   new Date(2014, 6, 2, 12, 30, 21, 700),
   new Date(2014, 6, 2, 12, 30, 20, 600)
 );
-console.log("resulte", resulte);
-console.log(
-  "equal",
-  differenceInMilliseconds(
-    new Date("2020-03-30T20:39:52.000Z"),
-    new Date("2020-03-30T20:39:52.000Z")
-  )
+console.log("resulte",  new Date("2020-03-29T21:38:35.155Z").toISOString().split('T')[0]);
+
+console.log("result4e",  
+new Date("2020-03-29T21:06:46.000Z")
+
 );
 
+
+  function formatDay(date){
+        date = new Date(date);
+        var day = date.getDate(),
+            month = date.getMonth() + 1,
+            year = date.getFullYear();
+        if (month.toString().length == 1) {
+            month = "0" + month;
+        }
+        if (day.toString().length == 1) {
+            day = "0" + day;
+        }
+
+        return date = year + '-' + month + '-' + day;
+    };
+
+
+   // var dateString = 'Mon Jan 12 00:00:00 GMT 2015';
+    var dateString ='Tue Mar 31 2020 01:04:11 GMT+0300 (EAT)';
+dateString = new Date(dateString).toDateString();
+dateString = dateString.split(' ').slice(0, 4).join(' ');
+console.log(dateString);
+
+console.log(
+  "isSameDay",
+    isSameDay(
+      new Date(format(new Date(("2020-03-29T20:38:35.155Z").split('T')[0]), 'yyyy-MM-dd')), 
+      new Date(format(new Date(("2020-03-29T21:06:46.000Z").split('T')[0]), 'yyyy-MM-dd')))
+ 
+);
+//  isSameDay(
+//     new Date("2020-03-29T20:38:35.155Z"),
+//     new Date("2020-03-29T21:06:46.000Z")
+//   )
 console.log(
   "less",
   differenceInMilliseconds(
