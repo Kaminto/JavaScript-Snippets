@@ -1,6 +1,6 @@
 // Import stylesheets
 import "./style.css";
-import "./compare.js";
+import "./compare2.js";
 var filter = {
   address: "u",
   age: "",
@@ -33,7 +33,7 @@ var users = [
 users = users.filter(function(item) {
   for (var key in filter) {
     if (key === "paymentTypes") {
-      console.log(filter[key].length);
+     // console.log(filter[key].length);
       if (filter[key].length === 0) {
         return true;
       }
@@ -51,7 +51,7 @@ users = users.filter(function(item) {
   }
 });
 
-console.log(users);
+//console.log(users);
 // Write Javascript code!
 const appDiv = document.getElementById("app");
 appDiv.innerHTML = `<h1>JS Starter</h1>`;
