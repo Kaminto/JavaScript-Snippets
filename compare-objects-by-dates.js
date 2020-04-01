@@ -233,18 +233,31 @@ new Date("2020-03-29T21:06:46.000Z")
         return date = year + '-' + month + '-' + day;
     };
 
+ function isSimilarDay(dayRight, dateLeft) {
+     dayRight = typeof dayRight === 'string' ? dayRight.split('T')[0] : dayRight.toISOString().split('T')[0];
+     dateLeft = typeof dateLeft === 'string' ? dateLeft.split('T')[0] : dateLeft.toISOString().split('T')[0];
+console.log('ds',parseISO(dayRight))
+    return isSameDay(parseISO(dayRight), parseISO(dateLeft))
+
+  }
 
    // var dateString = 'Mon Jan 12 00:00:00 GMT 2015';
     var dateString ='Tue Mar 31 2020 01:04:11 GMT+0300 (EAT)';
 dateString = new Date(dateString).toDateString();
 dateString = dateString.split(' ').slice(0, 4).join(' ');
 console.log(dateString);
+let date = new Date("2020-03-29T20:38:35.155Z")
+// date.to
+//   console.log(isSameDay(new Date(format(new Date(("2020-03-29T20:38:35.155Z").split('T')[0]), 'yyyy-MM-dd')), new Date(format(new Date((date.split('T')[0])), 'yyyy-MM-dd'))))
+
+
+    console.log(isSimilarDay(date,new Date("2020-03-29T00:06:46.000Z")));
 
 console.log(
   "isSameDay",
     isSameDay(
-      new Date(format(new Date(("2020-03-29T20:38:35.155Z").split('T')[0]), 'yyyy-MM-dd')), 
-      new Date(format(new Date(("2020-03-29T21:06:46.000Z").split('T')[0]), 'yyyy-MM-dd')))
+      parseISO("2020-03-29T20:38:35.155Z"), 
+      parseISO("2020-03-29T21:06:46.000Z"))
  
 );
 //  isSameDay(
