@@ -13,131 +13,64 @@ import {
   ug
 } from "date-fns";
 
+let remote = [{"active": true, "created_at": "2018-08-02T01:05:21.000Z", "description": "Pricing for direct customers", "id": 2, "name": "direct", "updated_at": "2018-10-08T09:39:53.000Z"}, {"active": true, "created_at": "2018-08-02T01:05:22.000Z", "description": "Pricing for resellers and microfranchisees", "id": 3, "name": "reseller", "updated_at": "2018-10-08T09:40:42.000Z"}, {"active": false, "created_at": "2018-10-08T09:39:03.000Z", "description": "Water Club", "id": 4, "name": "water club", "updated_at": "2019-08-08T06:44:21.000Z"}, {"active": false, "created_at": "2020-01-16T08:35:45.000Z", "description": "Outlet Franchise", "id": 5, "name": "outlet franchise", "updated_at": "2020-04-01T13:21:19.000Z"}];
 
-let remote = [
-  {
-    active: true,
-    closingStockId: "66d33870-65c6-11ea-8329-f946dbedda34",
-    created_at: "2020-03-13T21:00:00.000Z",
-    id: 0,
-    kiosk_id: 1112,
-    notDispatched: 80,
-    product_id: "20L tap",
-    quantity: 54,
-    updated_at: "2020-03-14T07:45:05.000Z"
-  },
+let local = [{"active": true, "created_at": "2018-08-02T01:05:21.000Z", "description": "Pricing for direct customers", "id": 2, "name": "direct", "syncAction": null, "updated_at": "2018-10-08T09:39:53.000Z"}, {"active": true, "created_at": "2018-08-02T01:05:22.000Z", "description": "Pricing for resellers and microfranchisees", "id": 3, "name": "reseller", "syncAction": null, "updated_at": "2018-10-08T09:40:42.000Z"}, {"active": true, "created_at": "2018-10-08T09:39:03.000Z", "description": "Water Club", "id": 4, "name": "water club", "syncAction": null, "updated_at": "2019-08-08T06:44:21.000Z"}, {"active": true, "created_at": "2019-11-26T08:35:45.000Z", "description": "Outlet Franchise", "id": 5, "name": "outlet franchise", "syncAction": null, "updated_at": "2019-11-26T08:35:45.000Z"}];
+var uniquefiled = "id";
 
-  {
-    active: true,
-    closingStockId: "0a535d20-7343-11ea-95a3-ed53d12864b4",
-    created_at: "2020-03-31T11:30:36.000Z",
-    id: 19,
-    kiosk_id: 1112,
-    notDispatched: null,
-    product_id: "20L tap",
-    quantity: 45,
-    updated_at: null
-  },
-  {
-    active: true,
-    closingStockId: "9b7aaa60-72c6-11ea-b7cf-3595ef4752b0",
-    created_at: "2020-03-30T20:39:52.000Z",
-    id: 16,
-    kiosk_id: 1112,
-    notDispatched: null,
-    product_id: "20L tap",
-    quantity: 82,
-    updated_at: "2020-03-30T21:03:23.000Z"
-  },
-  {
-    active: true,
-    closingStockId: "5d3a8d20-72ca-11ea-9a8f-0bde6d5a5d4a",
-    created_at: "2020-03-29T21:06:46.000Z",
-    id: 17,
-    kiosk_id: 1112,
-    notDispatched: null,
-    product_id: "20L tap",
-    quantity: 85,
-    updated_at: null
+function compareRemoteAndLocal2(option1, option2, property) {
+  let newArray = [];
+  for (var i in option1) {
+    let result = option2.filter(e => {
+      return (
+        e[property] === option1[i][property] &&
+        (isSimilarDay(e.created_at, option1[i].created_at) ||
+          isSimilarDay(e.updated_at, option1[i].updated_at))
+      );
+    });
+
+    if (result.length === 0) {
+      newArray.push(option1[i]);
+    }
+
+    //console.log(result);
+
+    for (var b in result) {
+      //console.log(result[b]);
+      let currentDatediff = differenceInMilliseconds(
+        new Date(option1[i].created_at),
+        new Date(result[b].created_at)
+      );
+
+      let updateDatediff = differenceInMilliseconds(
+        new Date(option1[i].updated_at),
+        new Date(result[b].updated_at)
+      );
+      if (currentDatediff > 0 || updateDatediff > 0) {
+        newArray.push(option1[i]);
+      }
+    }
   }
-];
+  return newArray;
+}
 
-let local = [
-  {
-    active: false,
-    closingStockId: "fe65bad0-734c-11ea-a347-03f6b0ee72bb",
-    created_at: "2020-03-29T12:41:51.050Z",
-    id: null,
-    inventory: 78,
-    kiosk_id: 1112,
-    notDispatched: null,
-    product_id: "20L tap",
-    quantity: 78,
-    syncAction: "create",
-    updated_at: null,
-    wastageName: "20L tap"
-  },
-  {
-    active: true,
-    closingStockId: "66d33870-65c6-11ea-8329-f946dbedda34",
-    created_at: "2020-03-13T21:00:00.000Z",
-    id: 0,
-    inventory: 54,
-    kiosk_id: 1112,
-    notDispatched: 80,
-    product_id: "20L tap",
-    quantity: 54,
-    syncAction: null,
-    updated_at: "2020-03-14T07:45:05.000Z",
-    wastageName: "20L tap"
-  },
-  {
-    active: true,
-    closingStockId: "9b7aaa60-72c6-11ea-b7cf-3595ef4752b0",
-    created_at: "2020-03-30T20:39:52.000Z",
-    id: 16,
-    inventory: 82,
-    kiosk_id: 1112,
-    notDispatched: null,
-    product_id: "20L tap",
-    quantity: 82,
-    syncAction: null,
-    updated_at: "2020-03-30T21:03:23.000Z",
-    wastageName: "20L tap"
-  },
-  {
-    active: true,
-    closingStockId: "0a535d20-7343-11ea-95a3-ed53d12864b4",
-    created_at: "2020-03-31T11:30:36.000Z",
-    id: 19,
-    inventory: 45,
-    kiosk_id: 1112,
-    notDispatched: null,
-    product_id: "20L tap",
-    quantity: 45,
-    syncAction: null,
-    updated_at: null,
-    wastageName: "20L tap"
-  }
-];
+console.log("remote", compareRemoteAndLocal2(remote, local, "id"));
+console.log("local", compareRemoteAndLocal2(local,remote, "id"));
 
-function compareRemoteAndLocal(otherArray) {
+
+function compareRemoteAndLocal(otherArray,field) {
   return function(current) {
+    
     return (
-      otherArray.filter(function(other) {
+     otherArray.filter(function(other) {
         let currentDatediff = differenceInMilliseconds(
-          new Date(current.created_at),
-          new Date(other.created_at)
-        );
-
-        let isSameCurrentDay = isSameDay(
-          new Date(current.created_at),
-          new Date(other.created_at)
+          new Date(other.created_at),
+          new Date(current.created_at)
         );
 
         let updateDatediff = differenceInMilliseconds(
-          new Date(current.updated_at),
-          new Date(other.updated_at)
+          new Date(other.updated_at),
+          new Date(current.updated_at)
         );
 
         let isSameUpdateDay = isSameDay(
@@ -145,189 +78,120 @@ function compareRemoteAndLocal(otherArray) {
           new Date(other.updated_at)
         );
 
-        return (
-          (currentDatediff > 0 || isSameCurrentDay) &&
-          (updateDatediff > 0 || isSameUpdateDay)
+        let isSameCurrentDay = isSameDay(
+          new Date(current.created_at),
+          new Date(other.created_at)
         );
+
+        // if ((other.id == current.id) && (isSameCurrentDay || isSameUpdateDay)) {
+        //   if (currentDatediff > 0 || updateDatediff > 0) {
+        //     return true;
+        //   }
+        // }
+
+        if (
+        (other[field] == current[field]) && ( (currentDatediff > 0 || isSameCurrentDay) &&
+          (updateDatediff > 0 || isSameUpdateDay))
+        ) {
+          return true;
+        }
+
+
+       // return true;
+
+        //  return (
+        //   (currentDatediff > 0 || isSameCurrentDay) &&
+        //   (updateDatediff > 0 || isSameUpdateDay)
+        // );
+
         //}
-      }).length == 0
-    );
+      }).length === 0
+
+
+
+//console.log(current)
+//console.log(rte)
+// if(rte.length === 0){
+// return true
+// }
+  
+
+
+
+   );
   };
 }
 
-let onlyInLocal = local.filter(compareRemoteAndLocal(remote));
-let onlyInRemote = remote.filter(compareRemoteAndLocal(local));
-
-// const onlyInLocal = local.filter(c => {
-//   const result = remote.filter(p => {
-//     let currentDatediff = differenceInMilliseconds(
-//       new Date(c.created_at),
-//       new Date(p.created_at)
-//     );
-
-//     let isSameCurrentDay = isSameDay(
-//       new Date(c.created_at),
-//       new Date(p.created_at)
-//     );
-
-//     if (currentDatediff > 0 && isSameCurrentDay) {
-//       return true;
-//     }
-//   });
-//   //console.log(result)
-//  // console.log(c)
-//   if (result.length > 0) {
-//     return true;
-//   }
-// });
-
-// const onlyInRemote = remote.filter(c => {
-//   const result = local.filter(p => {
-//     let currentDatediff = differenceInMilliseconds(
-//       new Date(c.created_at),
-//       new Date(p.created_at)
-//     );
-
-//     let isSameCurrentDay = isSameDay(
-//       new Date(c.created_at),
-//       new Date(p.created_at)
-//     );
-
-//     if (currentDatediff > 0 && isSameCurrentDay) {
-//       return true;
-//     }
-//   });
-// //console.log(result)
-//   if (result.length > 0) {
-//     return true;
-//   }
-// });
-
+let onlyInLocal = local.filter(compareRemoteAndLocal(remote,'id'));
+let onlyInRemote = remote.filter(compareRemoteAndLocal(local,'id'));
 console.log("onlyInLocal", onlyInLocal);
 console.log("onlyInRemote", onlyInRemote);
 
-var resulte = differenceInMilliseconds(
-  new Date(2014, 6, 2, 12, 30, 21, 700),
-  new Date(2014, 6, 2, 12, 30, 20, 600)
-);
-console.log("resulte",  new Date("2020-03-29T21:38:35.155Z").toISOString().split('T')[0]);
+const onlyInRemote2 = remote.filter(c => {
+  const result = local.filter(p => {
+    let currentDatediff = differenceInMilliseconds(
+      parseISO(p.created_at),
+      parseISO(c.created_at)
+    );
 
-console.log("result4e",  
-new Date("2020-03-29T21:06:46.000Z")
+    let updateDatediff = differenceInMilliseconds(
+      parseISO(p.updated_at),
+      parseISO(c.updated_at)
+    );
 
-);
+    let isSameUpdateDay = isSimilarDay(c.updated_at, p.updated_at);
 
+    let isSameCurrentDay = isSimilarDay(c.created_at, p.created_at);
 
-  function formatDay(date){
-        date = new Date(date);
-        var day = date.getDate(),
-            month = date.getMonth() + 1,
-            year = date.getFullYear();
-        if (month.toString().length == 1) {
-            month = "0" + month;
-        }
-        if (day.toString().length == 1) {
-            day = "0" + day;
-        }
-
-        return date = year + '-' + month + '-' + day;
-    };
-
- function isSimilarDay(dayRight, dateLeft) {
-     dayRight = typeof dayRight === 'string' ? dayRight.split('T')[0] : dayRight.toISOString().split('T')[0];
-     dateLeft = typeof dateLeft === 'string' ? dateLeft.split('T')[0] : dateLeft.toISOString().split('T')[0];
-console.log('ds',parseISO(dayRight))
-    return isSameDay(parseISO(dayRight), parseISO(dateLeft))
-
-  }
-
-   // var dateString = 'Mon Jan 12 00:00:00 GMT 2015';
-    var dateString ='Tue Mar 31 2020 01:04:11 GMT+0300 (EAT)';
-dateString = new Date(dateString).toDateString();
-dateString = dateString.split(' ').slice(0, 4).join(' ');
-console.log(dateString);
-let date = new Date("2020-03-29T20:38:35.155Z")
-// date.to
-//   console.log(isSameDay(new Date(format(new Date(("2020-03-29T20:38:35.155Z").split('T')[0]), 'yyyy-MM-dd')), new Date(format(new Date((date.split('T')[0])), 'yyyy-MM-dd'))))
-
-
-    console.log(isSimilarDay(date,new Date("2020-03-29T00:06:46.000Z")));
-
-console.log(
-  "isSameDay",
-    isSameDay(
-      parseISO("2020-03-29T20:38:35.155Z"), 
-      parseISO("2020-03-29T21:06:46.000Z"))
- 
-);
-//  isSameDay(
-//     new Date("2020-03-29T20:38:35.155Z"),
-//     new Date("2020-03-29T21:06:46.000Z")
-//   )
-console.log(
-  "less",
-  differenceInMilliseconds(
-    new Date("2020-03-31T11:30:36.000Z"),
-    new Date("2020-03-31T12:30:36.000Z")
-  )
-);
-
-console.log(
-  "higher",
-  differenceInMilliseconds(
-    new Date("2020-03-31T11:30:36.000Z"),
-    new Date("2020-03-31T12:30:36.000Z")
-  )
-);
-
-const loca = [
-  { name: "spray", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "limit", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "elite", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "exuberant", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "destruction", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "present", created_at: "2020-03-31T11:30:36.000Z" }
-];
-const remo = [
-  { name: "sprayw", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "limits", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "limit", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "elite", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "exuberant", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "destruction", created_at: "2020-03-31T11:30:36.000Z" },
-  { name: "present", created_at: "2020-03-31T11:30:36.000Z" }
-];
-const onlyloca = loca.filter(c => {
-  const result = remo.filter(p => {
-    return p.name === c.name;
+    if (currentDatediff > 0 && updateDatediff > 0) {
+      // console.log('1-',currentDatediff)
+      // console.log('2-',isSameCurrentDay)
+      return true;
+    }
   });
-  if (result.length === 0) {
+  // console.log(result);
+  if (result.length > 0) {
     return true;
   }
 });
 
-const onlyRemo = remo.filter(c => {
-  const result = loca.filter(p => {
-    return p.name === c.name && p.created_at < c.created_at;
-  });
-  if (result.length === 0) {
-    return true;
-  }
-});
+//console.log("onlyInRemote2", onlyInRemote2);
 
-console.log("onlyloca", onlyloca);
-console.log("onlyRemo", onlyRemo);
-
-var array1 = ["A", "B", "C", "D", "D", "E"];
-var array2 = ["D", "E"];
-var index;
-
-for (var i = 0; i < array2.length; i++) {
-  index = array1.indexOf(array2[i]);
-  //console.log(index);
-  if (index > -1) {
-    array1.splice(index, 1);
-  }
+function isSimilarDay(dayRight, dateLeft) {
+  dayRight =
+    typeof dayRight === "string"
+      ? dayRight.split("T")[0]
+      : dayRight.toISOString().split("T")[0];
+  dateLeft =
+    typeof dateLeft === "string"
+      ? dateLeft.split("T")[0]
+      : dateLeft.toISOString().split("T")[0];
+  return isSameDay(parseISO(dayRight), parseISO(dateLeft));
 }
 
-//console.log(array1);
+let date = new Date("2020-03-29T20:38:35.155Z");
+// console.log(isSimilarDay(date, new Date("2020-03-29T00:06:46.000Z")));
+
+// console.log(
+//   "isSameDay",
+//   isSameDay(
+//     parseISO("2019-11-27T08:35:45.000Z"),
+//     parseISO("2020-01-16T08:35:45.000Z")
+//   )
+// );
+
+// console.log(
+//   "less",
+//   differenceInMilliseconds(
+//     new Date("2020-01-16T08:35:45.000Z"),
+//     new Date("2019-11-27T08:35:45.000Z")
+//   )
+// );
+
+// console.log(
+//   "higher",
+//   differenceInMilliseconds(
+//     new Date("2020-03-31T11:30:36.000Z"),
+//     new Date("2020-03-31T12:30:36.000Z")
+//   )
+// );
