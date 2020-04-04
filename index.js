@@ -55,3 +55,16 @@ users = users.filter(function(item) {
 // Write Javascript code!
 const appDiv = document.getElementById("app");
 appDiv.innerHTML = `<h1>JS Starter</h1>`;
+
+
+function invoiceid() {
+    var d = new Date().getTime();
+    //   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    var uuid = 'xxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+console.log(invoiceid())     
