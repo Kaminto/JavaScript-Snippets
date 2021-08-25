@@ -109,11 +109,20 @@ for (let r=0; r < sq.length; r++) {
     break;
   }
 }
-console.log(po);
+//console.log(po);
 let dimFormat = []
 for (let l=0; l < dim.length; l++) {
   if (dim[l]) {     
     dimFormat.push(dim[l]);    
   }
 }
-console.log(dimFormat.reduce((a, b) => Number(a) * Number(b)));
+//console.log(dimFormat.reduce((a, b) => Number(a) * Number(b)));
+
+let on = [
+  ['fv',189,'m^2', 0,0,0, 'cement-200', 'water-900', 'sand-4500' ],
+  ['fv',189,'m^2', 0,0,0, 'cement-200', 'water-900', 'sand-4500' ],
+  ['fv',189,'m^2', 0,0,0, 'cement-200', 'water-900', 'sand-4500' ],
+]
+
+console.log('on', on);
+ 
